@@ -1,0 +1,5 @@
+# Below are ignored by Git
+
+__pycache__/
+.env
+.venv
