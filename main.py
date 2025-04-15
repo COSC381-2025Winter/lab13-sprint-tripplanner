@@ -1,3 +1,27 @@
+import requests
+import os
+from dotenv import load_dotenv
+
+def getNearbyAttractions(longitude, latitude, place_type):
+    #Set a radius of 1000 meters, this can be changed if we want
+    radius = 1000
+
+    #Loading environment variables to get the API key
+    load_dotenv()
+    API_KEY = os.getenv("GOOGLE_API_KEY")
+
+    url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+    params = {
+        "location": f"{longitude},{latitude}",
+        "radius": radius,
+        "type": place_type,
+        "key": API_KEY,
+    }
+
+    response = requests.get(url, params=params)
+    data = response.json()
+    return data
+
 def show_menu():
     """Display the menu options."""
     print("\nTrip Planner")
@@ -13,11 +37,13 @@ def show_menu():
     print("Enter q to Exit\n")
 
 def main():
+    result = getNearbyAttractions("42.24193221947446", "-83.62000302245067", "museum")
+    for place in result.get("results", []):
+        print(place["name"])
     show_menu()
     location = input("Enter Location: ")
     place = input("Enter place type: ")
     
-
 if __name__ == "__main__":
     main()
     
