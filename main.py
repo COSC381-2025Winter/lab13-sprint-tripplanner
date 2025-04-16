@@ -57,11 +57,11 @@ def main():
     lat = -1
     lng = -1
 
-    # result = getNearbyAttractions("42.24193221947446", "-83.62000302245067", "museum")
-    # for place in result.get("results", []):
-    #     print(place["name"])
+    # sample hardcoded
+    result = getNearbyAttractions("42.24193221947446", "-83.62000302245067", "museum")
+    for place in result.get("results", []):
+        print(place["name"])
     show_menu()
-
 
     while(keepRunning):
         # request user input as City, ST
@@ -78,7 +78,12 @@ def main():
             keepRunning = False
         else:
             print("Could not retrieve coordinates. Error:", response.get("error_message", "Try again"))
-        
+    
+    # get results
+    result = getNearbyAttractions(lat, lng, place.lower())
+    for place in result.get("results", []):
+        print(place["name"])
+
         
 if __name__ == "__main__":
     main()
