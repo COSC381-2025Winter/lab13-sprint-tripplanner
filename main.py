@@ -53,16 +53,33 @@ def show_menu():
     print("Enter q to Exit\n")
 
 def main():
+    keepRunning = True
+    lat = -1
+    lng = -1
+
     # result = getNearbyAttractions("42.24193221947446", "-83.62000302245067", "museum")
     # for place in result.get("results", []):
     #     print(place["name"])
     show_menu()
 
-    # request user input as City, ST
-    location = input("Enter City, ST: ")
-    place = input("Enter place type: ")
-    print(getLongAndLat(location))
-    
+
+    while(keepRunning):
+        # request user input as City, ST
+        location = input("Enter City, ST: ")
+        place = input("Enter place type: ")
+
+        # start extraction of Long and Lat from location specified
+        response = getLongAndLat(location)
+        if response.get("status") == "OK":
+            location_data = response["results"][0]["geometry"]["location"]
+            lat = location_data["lat"]
+            lng = location_data["lng"]
+            print(f"Latitude: {lat}, Longitude: {lng}")
+            keepRunning = False
+        else:
+            print("Could not retrieve coordinates. Error:", response.get("error_message", "Try again"))
+        
+        
 if __name__ == "__main__":
     main()
     
