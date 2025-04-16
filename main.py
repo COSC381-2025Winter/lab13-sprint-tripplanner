@@ -23,8 +23,6 @@ def getNearbyAttractions(longitude, latitude, place_type):
     return data
 
 def getLongAndLat(location):
-        #Set a radius of 1000 meters, this can be changed if we want
-    radius = 1000
 
     #Loading environment variables to get the API key
     load_dotenv()
@@ -62,9 +60,7 @@ def main():
 
     # request user input as City, ST
     location = input("Enter City, ST: ")
-
     place = input("Enter place type: ")
-
     print(getLongAndLat(location))
     
 if __name__ == "__main__":
