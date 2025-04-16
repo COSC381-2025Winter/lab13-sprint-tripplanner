@@ -57,10 +57,6 @@ def main():
     lat = -1
     lng = -1
 
-    # sample hardcoded
-    result = getNearbyAttractions("42.24193221947446", "-83.62000302245067", "museum")
-    for place in result.get("results", []):
-        print(place["name"])
     show_menu()
 
     while(keepRunning):
