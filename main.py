@@ -22,6 +22,24 @@ def getNearbyAttractions(longitude, latitude, place_type):
     data = response.json()
     return data
 
+def getLongAndLat(location):
+        #Set a radius of 1000 meters, this can be changed if we want
+    radius = 1000
+
+    #Loading environment variables to get the API key
+    load_dotenv()
+    API_KEY = os.getenv("GEOCODING_API_KEY")
+
+    geocodeURL = f"https://maps.googleapis.com/maps/api/geocode/json"
+    params = {
+        "address": location,
+        "key": API_KEY,
+    }
+
+    response = requests.get(geocodeURL, params=params)
+    data = response.json()
+    return data
+
 def show_menu():
     """Display the menu options."""
     print("\nTrip Planner")
@@ -37,12 +55,17 @@ def show_menu():
     print("Enter q to Exit\n")
 
 def main():
-    result = getNearbyAttractions("42.24193221947446", "-83.62000302245067", "museum")
-    for place in result.get("results", []):
-        print(place["name"])
+    # result = getNearbyAttractions("42.24193221947446", "-83.62000302245067", "museum")
+    # for place in result.get("results", []):
+    #     print(place["name"])
     show_menu()
-    location = input("Enter Location: ")
+
+    # request user input as City, ST
+    location = input("Enter City, ST: ")
+
     place = input("Enter place type: ")
+
+    print(getLongAndLat(location))
     
 if __name__ == "__main__":
     main()
