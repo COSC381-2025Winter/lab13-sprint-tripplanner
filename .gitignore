@@ -4,3 +4,5 @@ __pycache__/
 .env
 .venv
 my_env*
+*.env
+.idea
