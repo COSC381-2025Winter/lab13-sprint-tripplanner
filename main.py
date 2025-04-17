@@ -2,41 +2,49 @@ import requests
 import os
 from dotenv import load_dotenv
 
-def getNearbyAttractions(longitude, latitude, place_type):
-    #Set a radius of 1000 meters, this can be changed if we want
-    radius = 1000
+# Load environment variables once at the top
+load_dotenv()
+API_KEY = os.getenv("GOOGLE_API_KEY")  # Use the same key for all API requests
 
-    #Loading environment variables to get the API key
-    load_dotenv()
-    API_KEY = os.getenv("GOOGLE_API_KEY")
-
-    url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json"
-    params = {
-        "location": f"{longitude},{latitude}",
-        "radius": radius,
-        "type": place_type,
-        "key": API_KEY,
-    }
-
-    response = requests.get(url, params=params)
-    data = response.json()
-    return data
-
-def getLongAndLat(location):
-
-    #Loading environment variables to get the API key
-    load_dotenv()
-    API_KEY = os.getenv("GEOCODING_API_KEY")
-
-    geocodeURL = f"https://maps.googleapis.com/maps/api/geocode/json"
+def get_long_and_lat(location):
+    """Get latitude and longitude from a location string using Geocoding API."""
+    url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
         "address": location,
         "key": API_KEY,
     }
+    response = requests.get(url, params=params)
+    return response.json()
 
-    response = requests.get(geocodeURL, params=params)
+def get_nearby_attractions(latitude, longitude, place_type, radius=1000):
+    """Find nearby places of the given type."""
+    url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+    params = {
+        "location": f"{latitude},{longitude}",
+        "radius": radius,
+        "type": place_type,
+        "key": API_KEY,
+    }
+    response = requests.get(url, params=params)
+    return response.json()
+
+def get_distance_and_duration(origin_lat, origin_lng, destination_lat, destination_lng):
+    """Calculate distance and duration between origin and destination."""
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json"
+    params = {
+        "origins": f"{origin_lat},{origin_lng}",
+        "destinations": f"{destination_lat},{destination_lng}",
+        "key": API_KEY,
+        "mode": "walking",
+    }
+    response = requests.get(url, params=params)
     data = response.json()
-    return data
+
+    if data.get("status") == "OK":
+        element = data["rows"][0]["elements"][0]
+        if element["status"] == "OK":
+            return element["distance"]["text"], element["duration"]["text"]
+    return "N/A", "N/A"
 
 def show_menu():
     """Display the menu options."""
@@ -53,34 +61,40 @@ def show_menu():
     print("Enter q to Exit\n")
 
 def main():
-    keepRunning = True
-    lat = -1
-    lng = -1
-
     show_menu()
 
-    while(keepRunning):
-        # request user input as City, ST
-        location = input("Enter City, ST: ")
-        place = input("Enter place type: ")
+    while True:
+        location_input = input("Enter City, ST: ").strip()
+        if location_input.lower() == 'q':
+            return
 
-        # start extraction of Long and Lat from location specified
-        response = getLongAndLat(location)
-        if response.get("status") == "OK":
-            location_data = response["results"][0]["geometry"]["location"]
-            lat = location_data["lat"]
-            lng = location_data["lng"]
-            print(f"Latitude: {lat}, Longitude: {lng}")
-            keepRunning = False
+        place_type = input("Enter place type: ").strip().lower()
+        geo_data = get_long_and_lat(location_input)
+
+        if geo_data.get("status") == "OK":
+            coords = geo_data["results"][0]["geometry"]["location"]
+            lat, lng = coords["lat"], coords["lng"]
+            print(f"\nCoordinates Found: Latitude {lat}, Longitude {lng}")
+            break
         else:
-            print("Could not retrieve coordinates. Error:", response.get("error_message", "Try again"))
-    
-    # get results
-    result = getNearbyAttractions(lat, lng, place.lower())
-    for place in result.get("results", []):
-        print(place["name"])
+            print("Could not retrieve coordinates. Error:", geo_data.get("error_message", "Try again."))
 
-        
+    # Get and display nearby results
+    result = get_nearby_attractions(lat, lng, place_type)
+
+    print(f"\nNearby {place_type.capitalize()}s:\n")
+
+    for place in result.get("results", []):
+        name = place.get("name", "Unknown Place")
+        dest = place.get("geometry", {}).get("location", {})
+        dest_lat = dest.get("lat")
+        dest_lng = dest.get("lng")
+
+        if dest_lat is not None and dest_lng is not None:
+            distance, duration = get_distance_and_duration(lat, lng, dest_lat, dest_lng)
+            print(f"{name} — {distance} away, approx. {duration}")
+        else:
+            print(f"{name} — Location unavailable")
+
 if __name__ == "__main__":
     main()
-    
