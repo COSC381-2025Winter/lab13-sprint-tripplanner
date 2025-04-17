@@ -41,16 +41,21 @@ def getLongAndLat(location):
 def show_menu():
     """Display the menu options."""
     print("\nTrip Planner")
+    print("Enter q at any point to Exit")
+
+def show_available_place_types():
+    """Display available place types"""
     print("Available Place Types")
-    print("1. Aquarium")
-    print("2. Art Gallery")
-    print("3. Bakery")
-    print("4. Bar")
-    print("5. Museum")
-    print("6. Restaurant")
-    print("7. Tourist Attraction")
-    print("8. Zoo")
-    print("Enter q to Exit\n")
+    print("---------------------")
+    print("1.Aquarium")
+    print("2.Art Gallery")
+    print("3.Bakery")
+    print("4.Bar")
+    print("5.Museum")
+    print("6.Restaurant")
+    print("7.Tourist Attraction")
+    print("8.Zoo")
+    print("---------------------")
 
 def main():
     keepRunning = True
@@ -61,8 +66,10 @@ def main():
 
     while(keepRunning):
         # request user input as City, ST
-        location = input("Enter City, ST: ")
-        place = input("Enter place type: ")
+        location = input("\nEnter City, ST: ")
+        if location.upper() == "Q":
+            print("Goodbye!")
+            break
 
         # start extraction of Long and Lat from location specified
         response = getLongAndLat(location)
@@ -70,15 +77,45 @@ def main():
             location_data = response["results"][0]["geometry"]["location"]
             lat = location_data["lat"]
             lng = location_data["lng"]
-            print(f"Latitude: {lat}, Longitude: {lng}")
-            keepRunning = False
         else:
             print("Could not retrieve coordinates. Error:", response.get("error_message", "Try again"))
+            continue
+
+        # get place type input from user
+        show_available_place_types()
+        choice = input("\nSelect a place type: ")
+        match choice:
+            case "1":
+                place = "aquarium"
+            case "2":
+                place = "art_gallery"
+            case "3": 
+                place = "bakery"
+            case "4":
+                place = "bar"
+            case "5":
+                place = "museum"
+            case "6":
+                place = "restaurant"
+            case "7":
+                place = "tourist_attraction"
+            case "8":
+                place = "zoo"
+            case "q"|"Q":
+                print("Goodbye!")
+                break
+            case _:
+                print("Invalid place type, please try again.")
+                continue
     
-    # get results
-    result = getNearbyAttractions(lat, lng, place.lower())
-    for place in result.get("results", []):
-        print(place["name"])
+        # get results
+        result = getNearbyAttractions(lat, lng, place.lower())
+        places = result.get("results", [])
+        if len(places) == 0:
+            print("No results were found.")
+            continue
+        for place in places:
+            print(place["name"])
 
         
 if __name__ == "__main__":
