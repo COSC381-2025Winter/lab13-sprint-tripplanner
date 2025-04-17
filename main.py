@@ -38,6 +38,28 @@ def getLongAndLat(location):
     data = response.json()
     return data
 
+def get_distance_and_duration(origin_lat, origin_lng, destination_lat, destination_lng):
+    """Calculate distance and duration between origin and destination."""
+
+    API_KEY = os.getenv("DISTANCE_MATRIX_API_KEY")
+
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json"
+    params = {
+        "origins": f"{origin_lat},{origin_lng}",
+        "destinations": f"{destination_lat},{destination_lng}",
+        "key": API_KEY,
+        "mode": "Driving",
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+
+
+    if data.get("status") == "OK":
+        element = data["rows"][0]["elements"][0]
+        if element["status"] == "OK":
+            return element["distance"]["text"], element["duration"]["text"]
+    return "N/A", "N/A"
+
 def show_menu():
     """Display the menu options."""
     print("\nTrip Planner")
@@ -108,16 +130,26 @@ def main():
                 print("Invalid place type, please try again.")
                 continue
     
-        # get results
-        result = getNearbyAttractions(lat, lng, place.lower())
-        places = result.get("results", [])
-        if len(places) == 0:
-            print("No results were found.")
-            continue
-        for place in places:
-            print(place["name"])
+        #Get and display nearby results
+        result = getNearbyAttractions(lat, lng, place)
+
+
+        print(f"\nNearby {place.capitalize()}s:\n")
+
+
+        for place in result.get("results", []):
+            name = place.get("name", "Unknown Place")
+            dest = place.get("geometry", {}).get("location", {})
+            dest_lat = dest.get("lat")
+            dest_lng = dest.get("lng")
+
+
+            if dest_lat is not None and dest_lng is not None:
+                distance, duration = get_distance_and_duration(lat, lng, dest_lat, dest_lng)
+                print(f"{name} — {distance} away, approx. {duration}")
+            else:
+                print(f"{name} — Location unavailable")
 
         
 if __name__ == "__main__":
     main()
-    
