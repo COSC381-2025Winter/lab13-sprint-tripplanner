@@ -3,8 +3,6 @@
 __pycache__/
 .env
 .venv
-my_env*
 *.env
 .idea
-tripPlanner/.DS_Store
 .DS_Store
