@@ -1,0 +1,9 @@
+# Below are ignored by Git
+
+__pycache__/
+.env
+.venv
+my_env*
+*.env
+.idea
+.DS_Store
