@@ -6,4 +6,5 @@ __pycache__/
 my_env*
 *.env
 .idea
-.DS_Store
+tripPlanner/.DS_Store
+*.DS_Store
