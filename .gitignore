@@ -1,12 +1,7 @@
-# Below are ignored by Git
-
+# Below are ignored by Gitq
 __pycache__/
 .env
 .venv
 my_env*
 *.env
 .idea
-tripPlanner/.DS_Store
-*.env
-.idea
-.DS_Store
