@@ -7,4 +7,6 @@ my_env*
 *.env
 .idea
 tripPlanner/.DS_Store
+*.env
+.idea
 .DS_Store
