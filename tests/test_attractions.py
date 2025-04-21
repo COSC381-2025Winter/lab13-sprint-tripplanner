@@ -10,6 +10,7 @@ from attractions import get_distance_and_duration, getNearbyAttractions
 # Test 1: Normal working response
 @patch("attractions.requests.get")
 def test_distance_and_duration_success(mock_get):
+    # Arrange
     mock_get.return_value.json.return_value = {
         "status": "OK",
         "rows": [{
@@ -20,8 +21,11 @@ def test_distance_and_duration_success(mock_get):
             }]
         }]
     }
-
+   
+    # Act
     distance, duration = get_distance_and_duration(40.0, -73.0, 40.1, -73.1)
+    
+    # Assert
     assert distance == "3.2 km"
     assert duration == "7 mins"
 
@@ -29,11 +33,15 @@ def test_distance_and_duration_success(mock_get):
 # Test 2: API fails
 @patch("attractions.requests.get")
 def test_api_status_fail(mock_get):
+    # Arrange
     mock_get.return_value.json.return_value = {
         "status": "REQUEST_DENIED"
     }
-
+    
+    # Act
     distance, duration = get_distance_and_duration(40.0, -73.0, 40.1, -73.1)
+    
+    # Assert
     assert distance == "N/A"
     assert duration == "N/A"
     
@@ -41,6 +49,7 @@ def test_api_status_fail(mock_get):
 # Test 3: Location not found
 @patch("attractions.requests.get")
 def test_element_status_fail(mock_get):
+    # Arrange
     mock_get.return_value.json.return_value = {
         "status": "OK",
         "rows": [{
@@ -49,8 +58,11 @@ def test_element_status_fail(mock_get):
             }]
         }]
     }
-
+    
+    # Act
     distance, duration = get_distance_and_duration(0, 0, 0, 0)
+    
+    # Assert
     assert distance == "N/A"
     assert duration == "N/A"
 
