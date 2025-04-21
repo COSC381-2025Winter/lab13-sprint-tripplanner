@@ -20,14 +20,11 @@ def main():
             print("Goodbye!")
             break
 
-        # start extraction of Long and Lat from location specified
-        response = city.getLongAndLat(location)
-        if response.get("status") == "OK":
-            location_data = response["results"][0]["geometry"]["location"]
-            lat = location_data["lat"]
-            lng = location_data["lng"]
-        else:
-            print("Could not retrieve coordinates. Error:", response.get("error_message", "Try again"))
+        try:
+            user_city = city.City(location)
+            lat, lng = user_city.get_coordinates()
+        except ValueError as e:
+            print("Could not retrieve coordinates. Error:", str(e))
             continue
 
         # get place type input from user
@@ -57,8 +54,8 @@ def main():
                 print("Invalid place type, please try again.")
                 continue
     
-        #Get and display nearby results
-        result = attractions.getNearbyAttractions(lat, lng, place)
+        finder = attractions.AttractionFinder(lat, lng)
+        result = finder.get_nearby_attractions(place)
 
         print(f"\nNearby {place.capitalize()}s:\n")
 
@@ -69,7 +66,7 @@ def main():
             dest_lng = dest.get("lng")
 
             if dest_lat is not None and dest_lng is not None:
-                distance, duration = attractions.get_distance_and_duration(lat, lng, dest_lat, dest_lng)
+                distance, duration = attractions.AttractionFinder.get_distance_and_duration(lat, lng, dest_lat, dest_lng)
                 print(f"{name} — {distance} away, approx. {duration}")
             else:
                 print(f"{name} — Location unavailable")
