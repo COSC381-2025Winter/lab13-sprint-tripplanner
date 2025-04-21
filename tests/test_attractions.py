@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../s
 
 import pytest
 from unittest.mock import patch
-from attractions import get_distance_and_duration 
+from attractions import get_distance_and_duration, getNearbyAttractions
 # Hassan Mouzaihem
 # Test 1: Normal working response
 @patch("attractions.requests.get")
@@ -53,3 +53,40 @@ def test_element_status_fail(mock_get):
     distance, duration = get_distance_and_duration(0, 0, 0, 0)
     assert distance == "N/A"
     assert duration == "N/A"
+
+# Olivia Daniels
+@patch("attractions.requests.get")
+def test_successful_get_nearby_attractions(mock_get):
+    # Arrange
+    longitude = -83.6129
+    latitude = 42.2411
+    place_type = "restaurant"
+    expected_json = {
+        "results": [{"name": "Café Aroma"}],
+        "status": "OK"
+    }
+    mock_get.return_value.status_code = 200
+    mock_get.return_value.json = lambda: expected_json
+
+    # Act
+    response = getNearbyAttractions(longitude, latitude, place_type)
+
+    # Assert
+    assert response["status"] == "OK"
+    assert isinstance(response["results"], list)
+    assert response["results"][0]["name"] == "Café Aroma"
+
+
+# Olivia Daniels
+@patch("attractions.requests.get")
+def test_get_nearby_attractions_with_invalid_API_key(mock_get):
+    # Arrange
+    mock_get.return_value.status_code = 200
+    mock_get.return_value.json = lambda: {"status": "REQUEST_DENIED"}
+
+    # Act
+    response = getNearbyAttractions(-83.6129, 42.2411, "museum")
+
+    # Assert
+    assert "status" in response
+    assert response["status"] == "REQUEST_DENIED"
