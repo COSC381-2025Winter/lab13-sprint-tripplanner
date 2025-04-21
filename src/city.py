@@ -2,18 +2,29 @@ import requests
 import os
 from dotenv import load_dotenv
 
-def getLongAndLat(location):
+class City:
+    def __init__(self, name):
+        self.name = name
+        self.latitude = None
+        self.longitude = None
 
-    #Loading environment variables to get the API key
-    load_dotenv()
-    API_KEY = os.getenv("GEOCODING_API_KEY")
+    def get_coordinates(self):
+        load_dotenv()
+        API_KEY = os.getenv("GEOCODING_API_KEY")
 
-    geocodeURL = f"https://maps.googleapis.com/maps/api/geocode/json"
-    params = {
-        "address": location,
-        "key": API_KEY,
-    }
+        geocodeURL = "https://maps.googleapis.com/maps/api/geocode/json"
+        params = {
+            "address": self.name,
+            "key": API_KEY,
+        }
 
-    response = requests.get(geocodeURL, params=params)
-    data = response.json()
-    return data
+        response = requests.get(geocodeURL, params=params)
+        data = response.json()
+
+        if "results" in data and data["results"]:
+            location = data["results"][0]["geometry"]["location"]
+            self.latitude = location["lat"]
+            self.longitude = location["lng"]
+            return self.latitude, self.longitude
+        else:
+            raise ValueError("No coordinates found for the given city.")
