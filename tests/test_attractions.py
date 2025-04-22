@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../s
 
 import pytest
 from unittest.mock import patch
-from attractions import get_distance_and_duration, getNearbyAttractions
+from attractions import AttractionFinder
 # Hassan Mouzaihem
 # Test 1: Normal working response
 @patch("attractions.requests.get")
@@ -23,7 +23,7 @@ def test_distance_and_duration_success(mock_get):
     }
    
     # Act
-    distance, duration = get_distance_and_duration(40.0, -73.0, 40.1, -73.1)
+    distance, duration = AttractionFinder.get_distance_and_duration(40.0, -73.0, 40.1, -73.1)
     
     # Assert
     assert distance == "3.2 km"
@@ -39,7 +39,7 @@ def test_api_status_fail(mock_get):
     }
     
     # Act
-    distance, duration = get_distance_and_duration(40.0, -73.0, 40.1, -73.1)
+    distance, duration = AttractionFinder.get_distance_and_duration(40.0, -73.0, 40.1, -73.1)
     
     # Assert
     assert distance == "N/A"
@@ -60,7 +60,7 @@ def test_element_status_fail(mock_get):
     }
     
     # Act
-    distance, duration = get_distance_and_duration(0, 0, 0, 0)
+    distance, duration = AttractionFinder.get_distance_and_duration(0, 0, 0, 0)
     
     # Assert
     assert distance == "N/A"
@@ -81,7 +81,8 @@ def test_successful_get_nearby_attractions(mock_get):
     mock_get.return_value.json = lambda: expected_json
 
     # Act
-    response = getNearbyAttractions(longitude, latitude, place_type)
+    finder = AttractionFinder(latitude, longitude)
+    response = finder.get_nearby_attractions(place_type)
 
     # Assert
     assert response["status"] == "OK"
@@ -97,7 +98,8 @@ def test_get_nearby_attractions_with_invalid_API_key(mock_get):
     mock_get.return_value.json = lambda: {"status": "REQUEST_DENIED"}
 
     # Act
-    response = getNearbyAttractions(-83.6129, 42.2411, "museum")
+    finder = AttractionFinder(42.2411, -83.6129)
+    response = finder.get_nearby_attractions("museum")
 
     # Assert
     assert "status" in response
