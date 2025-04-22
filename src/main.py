@@ -57,7 +57,7 @@ def main():
         finder = attractions.AttractionFinder(lat, lng)
         result = finder.get_nearby_attractions(place)
 
-        print(f"\nNearby {place.capitalize()}s:\n")
+        print(f"\nNearby {place.replace('_', ' ').capitalize()}s:\n")
 
         for place in result.get("results", []):
             name = place.get("name", "Unknown Place")

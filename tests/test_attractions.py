@@ -1,6 +1,7 @@
 # testing for functions in attractions.py
 import os
 import sys
+from unittest.mock import Mock
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
 
 import pytest
@@ -104,3 +105,17 @@ def test_get_nearby_attractions_with_invalid_API_key(mock_get):
     # Assert
     assert "status" in response
     assert response["status"] == "REQUEST_DENIED"
+
+# Olivia Daniels - added for pytest coverage
+@patch("attractions.AttractionFinder")
+def test_getNearbyAttractions(mock_finder_class):
+    mock_finder = Mock()
+    mock_finder.get_nearby_attractions.return_value = {"results": []}
+    mock_finder_class.return_value = mock_finder
+
+    from attractions import getNearbyAttractions
+    result = getNearbyAttractions(-83.61, 42.24, "aquarium")
+
+    assert result == {"results": []}
+    mock_finder_class.assert_called_once_with(42.24, -83.61)
+    mock_finder.get_nearby_attractions.assert_called_once_with("aquarium")
