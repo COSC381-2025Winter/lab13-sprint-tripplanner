@@ -1,5 +1,5 @@
-[LAB13-SPRINT-TRIPPLANNER]
-name = "tripPlanner_Lab13"
+[project]
+name = "lab13_TripPlanner"
 version = "0.0.1"
 authors = [
   { name="Olivia Daniels, Angelia Philip, Oliver McMillen, Hassan Mouzaihem", email="author@example.com" },
@@ -16,6 +16,6 @@ classifiers = [
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 
-[LAB13-SPRINT-TRIPPLANNER.urls]
+[project.urls]
 Homepage = "https://github.com/COSC381-2025Winter/lab13-sprint-tripplanner"
 Issues = "https://github.com/COSC381-2025Winter/lab13-sprint-tripplanner/issues"
