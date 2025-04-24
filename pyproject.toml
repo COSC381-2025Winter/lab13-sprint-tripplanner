@@ -1,6 +1,10 @@
 [project]
 name = "lab13_TripPlanner"
 version = "0.0.2"
+dependencies = [
+  "requests",
+  "python-dotenv"
+]
 authors = [
   { name="Olivia Daniels, Angelia Philip, Oliver McMillen, Hassan Mouzaihem", email="author@example.com" },
 ]
