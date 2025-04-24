@@ -3,7 +3,8 @@ name = "lab13_TripPlanner"
 version = "1.0.1"
 dependencies = [
   "requests",
-  "python-dotenv"
+  "python-dotenv",
+  "pytest"
 ]
 authors = [
   { name="Olivia Daniels, Angelia Philip, Oliver McMillen, Hassan Mouzaihem", email="author@example.com" },
