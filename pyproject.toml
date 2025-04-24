@@ -1,0 +1,28 @@
+[project]
+name = "lab13_TripPlanner"
+version = "1.0.1"
+dependencies = [
+  "requests",
+  "python-dotenv"
+]
+authors = [
+  { name="Olivia Daniels, Angelia Philip, Oliver McMillen, Hassan Mouzaihem", email="author@example.com" },
+]
+description = """This Python program is a command-line trip planner that allows users to input a city and search for nearby attractions 
+such as museums or restaurants using the Google Places and Distance Matrix APIs. It returns a list of locations, 
+along with estimated driving distances and durations."""
+readme = "README.md"
+requires-python = ">=3.12.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.urls]
+Homepage = "https://github.com/COSC381-2025Winter/lab13-sprint-tripplanner"
+Issues = "https://github.com/COSC381-2025Winter/lab13-sprint-tripplanner/issues"
