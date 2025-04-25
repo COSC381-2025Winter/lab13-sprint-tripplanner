@@ -5,7 +5,7 @@ import sys
 import pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src/tripplanner")))
-from city import City
+from tripplanner.city import City
 
 # Oliver McMillen
 def test_empty_cityst_entered():

@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../s
 
 import pytest
 from unittest.mock import patch
-from attractions import AttractionFinder
+from tripplanner.attractions import AttractionFinder
 # Hassan Mouzaihem
 # Test 1: Normal working response
 @patch("attractions.requests.get")

@@ -6,8 +6,8 @@ import pytest
 from unittest.mock import MagicMock, patch, Mock
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../src/tripplanner")))
 
-from main import show_menu, main
-from attractions import show_available_place_types
+from tripplanner.main import show_menu, main
+from tripplanner.attractions import show_available_place_types
 
 
 @pytest.fixture
