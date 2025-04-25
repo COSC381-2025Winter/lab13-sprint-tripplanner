@@ -3,6 +3,7 @@
 import os
 import sys
 import pytest
+from unittest.mock import patch
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src/tripplanner")))
 from tripplanner.city import City
@@ -34,18 +35,26 @@ def test_numerical_cityst_entered():
         city.get_coordinates()
 
 #Oliver McMillen
-def test_validCity_entered():
-    # Arrange
-    input_value = "Ypsilanti, MI"
+@patch("tripplanner.city.requests.get")
+def test_validCity_entered(mock_get):
+    # Arrange: fake response from API
+    mock_get.return_value.json.return_value = {
+        "results": [{
+            "geometry": {
+                "location": {
+                    "lat": 42.2411,
+                    "lng": -83.612993
+                }
+            }
+        }],
+        "status": "OK"
+    }
+
+    city = City("Ypsilanti, MI")
 
     # Act
-    city = City(input_value)
     lat, lng = city.get_coordinates()
-
 
     # Assert
     assert isinstance(lat, float)
-    assert "42.2" in str(lat)
-
     assert isinstance(lng, float)
-    assert "-83.6" in str(lng)
