@@ -51,6 +51,8 @@ jobs:
         run: |
           echo "TWINE_USERNAME=__token__" >> $GITHUB_ENV
           echo "TWINE_PASSWORD=pypi-AgENdGVzdC5weXBpLm9yZwIkNTgxMDljNWYtYjVkYi00NDJiLTgxYzQtZDYyMWQ0NDNjNzg0AAIqWzMsIjk5ZGJiOTEyLTJhYTctNDdmZi05NmI1LTRiNjgxYmI5MTk5NiJdAAAGIJ-QHA_GJR2YEvQvI2Z5DWGVFXDf5kl_WBOyApfPPPr7" >> $GITHUB_ENV
+      
+      - name: Upload to TestPyPI
         run: |
             python -m twine upload --repository testpypi dist/*
 
