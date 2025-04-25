@@ -5,8 +5,8 @@ import sys
 import pytest
 from unittest.mock import patch
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src/tripplanner")))
-from tripplanner.city import City
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+from city import City
 
 # Oliver McMillen
 def test_empty_cityst_entered():
