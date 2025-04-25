@@ -50,7 +50,7 @@ jobs:
       - name: Upload to TestPyPI
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          TWINE_PASSWORD: pypi-AgENdGVzdC5weXBpLm9yZwIkNTgxMDljNWYtYjVkYi00NDJiLTgxYzQtZDYyMWQ0NDNjNzg0AAIqWzMsIjk5ZGJiOTEyLTJhYTctNDdmZi05NmI1LTRiNjgxYmI5MTk5NiJdAAAGIJ-QHA_GJR2YEvQvI2Z5DWGVFXDf5kl_WBOyApfPPPr7
         run: |
           python -m twine upload --repository testpypi dist/*
 
