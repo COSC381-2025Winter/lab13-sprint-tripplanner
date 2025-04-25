@@ -24,7 +24,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          pytest tests/
+          PYTHONPATH=src pytest tests/
 
   deploy:
     needs: build-and-test            # only run if tests pass
